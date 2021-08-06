@@ -1,0 +1,209 @@
+version: "3.5"
+
+services:
+  ########################################################
+  ### Web Front End
+  ########################################################
+  web-frontend:
+    container_name: web-frontend
+    hostname: web-frontend
+    restart: always
+    image: fernandodumont/acme-flights-web-frontend:latest
+    expose:
+      - 8090
+    ports:
+      - 8090:80
+    volumes:
+      - ./config/web-frontend-env.js:/usr/share/nginx/html/assets/env.js
+
+  ########################################################
+  ### Java
+  ########################################################
+  web-api:
+    container_name: web-api
+    hostname: web-api
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    env_file: ./config/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=web-api
+      - APPDYNAMICS_AGENT_NODE_NAME=web-api-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
+  api-manager:
+    container_name: api-manager
+    hostname: api-manager
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    env_file: ./config/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=api-manager
+      - APPDYNAMICS_AGENT_NODE_NAME=api-manager-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
+  auth-services:
+    container_name: auth-services
+    hostname: auth-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    env_file: ./config/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=auth-services
+      - APPDYNAMICS_AGENT_NODE_NAME=auth-services-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
+  customer-services:
+    container_name: customer-services
+    hostname: customer-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    env_file: ./config/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=customer-services
+      - APPDYNAMICS_AGENT_NODE_NAME=customer-services-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
+  flight-services:
+    container_name: flight-services
+    hostname: flight-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    env_file: ./config/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=flight-services
+      - APPDYNAMICS_AGENT_NODE_NAME=flight-services-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
+  offer-services:
+    container_name: offer-services
+    hostname: offer-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    env_file: ./config/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=offer-services
+      - APPDYNAMICS_AGENT_NODE_NAME=offer-services-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
+  payment-services:
+    container_name: payment-services
+    hostname: payment-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    env_file: ./config/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=payment-services
+      - APPDYNAMICS_AGENT_NODE_NAME=payment-services-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
+  search-services:
+    container_name: search-services
+    hostname: search-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    env_file: ./config/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=search-services
+      - APPDYNAMICS_AGENT_NODE_NAME=search-services-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
+  ticket-services:
+    container_name: ticket-services
+    hostname: ticket-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    env_file: ./config/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=ticket-services
+      - APPDYNAMICS_AGENT_NODE_NAME=ticket-services-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
+  track-services:
+    container_name: track-services
+    hostname: track-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    env_file: ./config/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=track-services
+      - APPDYNAMICS_AGENT_NODE_NAME=track-services-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
+  ########################################################
+  ### Databases and other backends
+  ########################################################
+
+  mongodb-flights:
+    image: fernandodumont/acme-flights-mongodb:latest
+    container_name: mongodb-flights
+    hostname: mongodb-flights
+    restart: always
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    hostname: mongo-express
+    restart: always
+    expose:
+      - 8081
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongodb-flights:27017
+    depends_on:
+      - mongodb-flights
+
+  ########################################################
+  ### AppDynamics
+  ########################################################
+
+  java-agent:
+    container_name: java-agent
+    hostname: java-agent
+    image: appdynamics/java-agent:latest
+    volumes:
+      - java-agent:/opt/appdynamics
+
+  machine-agent:
+    container_name: machine-agent
+    hostname: machine-agent
+    image: appdynamics/machine-agent-analytics:latest
+    env_file: ./config/controller.env
+    environment:
+      - APPDYNAMICS_SIM_ENABLED=true
+      - APPDYNAMICS_DOCKER_ENABLED=true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /:/hostroot:ro
+    expose:
+      - 9090
+
+volumes:
+  java-agent:

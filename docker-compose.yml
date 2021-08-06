@@ -1,0 +1,110 @@
+version: "3.5"
+
+services:
+  ########################################################
+  ### Web Front End
+  ########################################################
+  web-frontend:
+    container_name: web-frontend
+    hostname: web-frontend
+    restart: always
+    image: fernandodumont/acme-flights-web-frontend:latest
+    expose:
+      - 8090
+    ports:
+      - 8090:80
+    volumes:
+      - ./config/web-frontend-env.js:/usr/share/nginx/html/assets/env.js
+
+  ########################################################
+  ### Java
+  ########################################################
+  web-api:
+    container_name: web-api
+    hostname: web-api
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+
+  api-manager:
+    container_name: api-manager
+    hostname: api-manager
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+
+  auth-services:
+    container_name: auth-services
+    hostname: auth-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+
+  customer-services:
+    container_name: customer-services
+    hostname: customer-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+
+  flight-services:
+    container_name: flight-services
+    hostname: flight-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+
+  offer-services:
+    container_name: offer-services
+    hostname: offer-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+
+  payment-services:
+    container_name: payment-services
+    hostname: payment-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+
+  search-services:
+    container_name: search-services
+    hostname: search-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+
+  ticket-services:
+    container_name: ticket-services
+    hostname: ticket-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+
+  track-services:
+    container_name: track-services
+    hostname: track-services
+    restart: always
+    image: fernandodumont/acme-flights-java-services:latest
+
+  ########################################################
+  ### Databases and other backends
+  ########################################################
+
+  mongodb-flights:
+    image: fernandodumont/acme-flights-mongodb:latest
+    container_name: mongodb-flights
+    hostname: mongodb-flights
+    restart: always
+    ports:
+      - 27017:27017
+
+  mongo-express:
+    image: mongo-express:latest
+    container_name: mongo-express
+    hostname: mongo-express
+    restart: always
+    expose:
+      - 8081
+    ports:
+      - 8081:8081
+    environment:
+      - ME_CONFIG_MONGODB_URL=mongodb://mongodb-flights:27017
+    depends_on:
+      - mongodb-flights
