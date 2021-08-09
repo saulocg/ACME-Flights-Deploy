@@ -1,0 +1,10 @@
+wait: 1
+count: 5
+sortDevices: true
+sortLocations: true
+pages:
+  - { url: "http://web-frontend/pages/home" }
+  - { url: "http://web-frontend/auth/login" }
+  - { url: "http://web-frontend/pages/search" }
+  - { url: "http://web-frontend/pages/book" }
+  - { url: "http://web-frontend/pages/track" }

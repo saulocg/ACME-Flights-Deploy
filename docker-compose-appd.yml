@@ -2,23 +2,40 @@ version: "3.5"
 
 services:
   ########################################################
+  ### Loaders
+  ########################################################
+
+  loader-basic:
+    container_name: loader-basic
+    hostname: loader-basic
+    restart: always
+    image: fernandodumont/acme-flights-loaders:latest
+    env_file: ./config/appd/controller.env
+    volumes:
+      - ./config/loader/base-load.yml:/app/config/base-load.yml
+
+  ########################################################
   ### Web Front End
   ########################################################
+
   web-frontend:
     container_name: web-frontend
     hostname: web-frontend
     restart: always
     image: fernandodumont/acme-flights-web-frontend:latest
+    env_file: ./config/appd/controller.env
     expose:
       - 8090
     ports:
       - 8090:80
     volumes:
-      - ./config/web-frontend-env.js:/usr/share/nginx/html/assets/env.js
+      - ./config/web-frontend/env.js:/usr/share/nginx/html/assets/env.js
+      - ./config/web-frontend/appd.js:/usr/share/nginx/html/assets/appd.js
 
   ########################################################
   ### Java
   ########################################################
+
   web-api:
     container_name: web-api
     hostname: web-api
@@ -28,7 +45,7 @@ services:
       - 8080
     ports:
       - 8080:8080
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=web-api
@@ -41,7 +58,7 @@ services:
     hostname: api-manager
     restart: always
     image: fernandodumont/acme-flights-java-services:latest
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=api-manager
@@ -54,7 +71,7 @@ services:
     hostname: auth-services
     restart: always
     image: fernandodumont/acme-flights-java-services:latest
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=auth-services
@@ -67,7 +84,7 @@ services:
     hostname: customer-services
     restart: always
     image: fernandodumont/acme-flights-java-services:latest
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=customer-services
@@ -80,7 +97,7 @@ services:
     hostname: flight-services
     restart: always
     image: fernandodumont/acme-flights-java-services:latest
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=flight-services
@@ -93,7 +110,7 @@ services:
     hostname: offer-services
     restart: always
     image: fernandodumont/acme-flights-java-services:latest
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=offer-services
@@ -106,7 +123,7 @@ services:
     hostname: payment-services
     restart: always
     image: fernandodumont/acme-flights-java-services:latest
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=payment-services
@@ -119,7 +136,7 @@ services:
     hostname: search-services
     restart: always
     image: fernandodumont/acme-flights-java-services:latest
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=search-services
@@ -132,7 +149,7 @@ services:
     hostname: ticket-services
     restart: always
     image: fernandodumont/acme-flights-java-services:latest
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=ticket-services
@@ -145,7 +162,7 @@ services:
     hostname: track-services
     restart: always
     image: fernandodumont/acme-flights-java-services:latest
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=track-services
@@ -194,7 +211,7 @@ services:
     container_name: machine-agent
     hostname: machine-agent
     image: appdynamics/machine-agent-analytics:latest
-    env_file: ./config/controller.env
+    env_file: ./config/appd/controller.env
     environment:
       - APPDYNAMICS_SIM_ENABLED=true
       - APPDYNAMICS_DOCKER_ENABLED=true

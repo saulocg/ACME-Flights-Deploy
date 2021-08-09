@@ -2,8 +2,21 @@ version: "3.5"
 
 services:
   ########################################################
+  ### Loaders
+  ########################################################
+
+  loader-basic:
+    container_name: loader-basic
+    hostname: loader-basic
+    restart: always
+    image: fernandodumont/acme-flights-loaders:latest
+    volumes:
+      - ./config/loader/base-load.yml:/app/config/base-load.yml
+
+  ########################################################
   ### Web Front End
   ########################################################
+
   web-frontend:
     container_name: web-frontend
     hostname: web-frontend
@@ -14,11 +27,12 @@ services:
     ports:
       - 8090:80
     volumes:
-      - ./config/web-frontend-env.js:/usr/share/nginx/html/assets/env.js
+      - ./config/web-frontend/env.js:/usr/share/nginx/html/assets/env.js
 
   ########################################################
   ### Java
   ########################################################
+
   web-api:
     container_name: web-api
     hostname: web-api
