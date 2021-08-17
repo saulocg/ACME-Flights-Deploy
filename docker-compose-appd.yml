@@ -42,6 +42,10 @@ services:
     hostname: api-manager
     restart: always
     image: fernandodumont/acme-flights-java-services:latest
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
     env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
