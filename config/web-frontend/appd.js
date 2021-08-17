@@ -5,9 +5,11 @@ window["adrum-start-time"] = new Date().getTime();
   config.adrumExtUrlHttp = "http://cdn.appdynamics.com";
   config.adrumExtUrlHttps = "https://cdn.appdynamics.com";
 
-  config.appKey = "EUM-XXX-XXX";
-  config.beaconUrlHttp = "http://SERVER_EUM:7001";
-  config.beaconUrlHttps = "https://SERVER_EUM:7002";
+  config.appKey = "EUM-AAB-AUA";
+  config.beaconUrlHttp =
+    "http://labs-fhdumontcontroller-rqzqw02j.appd-cloudmachine.com:7001";
+  config.beaconUrlHttps =
+    "https://labs-fhdumontcontroller-rqzqw02j.appd-cloudmachine.com:7002";
 
   config.maxUrlLength = 512;
   config.xd = { enable: true };
@@ -19,7 +21,7 @@ window["adrum-start-time"] = new Date().getTime();
   config.angular = true;
 })(window["adrum-config"] || (window["adrum-config"] = {}));
 
-// CUSTOMIZAÇÕES
+// CUSTOMIZAÇÕES LOADERS
 (function (config) {
   let city = getCookie("location-city");
   let region = getCookie("location-region");
@@ -50,6 +52,57 @@ function getCookie(cname) {
     }
   }
   return "";
+}
+
+// CUSTOMIZAÇÕES EDITAL
+(function (config) {
+  (function (info) {
+    info.PageView = appdCreatePageView;
+  })(config.userEventInfo || (config.userEventInfo = {}));
+})(window["adrum-config"] || (window["adrum-config"] = {}));
+
+function appdCreatePageView() {
+  let appdUserDataStr = {};
+
+  // ITEM 4
+  try {
+    let userNameHTML = document.querySelector(".user-name");
+    if (userNameHTML != undefined && userNameHTML != null) {
+      userNameHTML = userNameHTML.innerText;
+      appdUserDataStr["userNameHTML"] = userNameHTML;
+    }
+    console.log("=> userNameHTML:", userNameHTML);
+  } catch (error) {
+    console.error(error);
+  }
+
+  // ITEM 5 - META TAG
+  try {
+    // OUTROS EXEMPLOS
+    // document.querySelector("meta[property='og:url']").getAttribute('content')
+    // document.head.querySelector("[property~=video][content]").content;
+    // document.querySelector('meta[name="description"]').content
+    let meta = document.querySelector('meta[name="viewport"]');
+    if (meta != undefined && meta != null && meta != "") {
+      appdUserDataStr["metaViewport"] = meta.content;
+    }
+    console.log("=> metaViewport:", meta);
+  } catch (error) {
+    console.error(error);
+  }
+
+  // ITEM 5 - JAVASCRIPT VARIABLES
+  try {
+    let screenSize = window.screen.width + "x" + window.screen.height;
+    appdUserDataStr["screenSize"] = screenSize;
+    console.log("=> variableScreenSize:", screenSize);
+  } catch (error) {
+    console.error(error);
+  }
+
+  return {
+    userData: appdUserDataStr,
+  };
 }
 
 // AGENTE
