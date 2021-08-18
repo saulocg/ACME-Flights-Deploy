@@ -106,6 +106,19 @@ services:
     volumes:
       - java-agent:/opt/appdynamics/java-agent/
 
+  ws-services:
+    container_name: ws-services
+    hostname: ws-services
+    restart: always
+    image: fernandodumont/acme-flights-ws-services:latest
+    env_file: ./config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=ws-services
+      - APPDYNAMICS_AGENT_NODE_NAME=ws-services-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+
   ########################################################
   ### Mock Services
   ########################################################
