@@ -81,7 +81,7 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-acme
+      - activemq-broker-acme
       - ldap-acme
 
   flight-services:
@@ -99,7 +99,7 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-acme
+      - activemq-broker-acme
       - ldap-acme
 
   ticket-services:
@@ -117,7 +117,7 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-acme
+      - activemq-broker-acme
       - ldap-acme
 
   track-services:
@@ -135,7 +135,25 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-acme
+      - activemq-broker-acme
+      - ldap-acme
+
+  activemq-services:
+    container_name: activemq-services
+    hostname: activemq-services
+    restart: always
+    image: fernandodumont/acme-flights-activemq-services:latest
+    env_file: ./config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=activemq-services
+      - APPDYNAMICS_AGENT_NODE_NAME=activemq-services-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+    depends_on:
+      - mongo-acme
+      - mysql-acme
+      - activemq-broker-acme
       - ldap-acme
 
   ws-services:
@@ -143,6 +161,10 @@ services:
     hostname: ws-services
     restart: always
     image: fernandodumont/acme-flights-ws-services:latest
+    expose:
+      - 8081
+    ports:
+      - 8081:8081
     env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
@@ -153,7 +175,7 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-acme
+      - activemq-broker-acme
       - ldap-acme
 
   ########################################################
@@ -195,10 +217,10 @@ services:
     ports:
       - 3306:3306
 
-  activemq-acme:
-    image: fernandodumont/acme-flights-activemq:latest
-    container_name: activemq-acme
-    hostname: activemq-acme
+  activemq-broker-acme:
+    image: fernandodumont/acme-flights-activemq-broker:latest
+    container_name: activemq-broker-acme
+    hostname: activemq-broker-acme
     restart: always
     expose:
       - 8161

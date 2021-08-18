@@ -1,10 +1,24 @@
 wait: 1
-count: 5
+count: 1
 sortDevices: true
 sortLocations: true
 pages:
   - { url: "http://web-frontend/pages/home" }
   - { url: "http://web-frontend/auth/login" }
   - { url: "http://web-frontend/pages/search" }
+  - { url: "http://web-frontend/pages/airline" }
   - { url: "http://web-frontend/pages/book" }
+  - { url: "http://web-frontend/pages/airline" }
   - { url: "http://web-frontend/pages/track" }
+  - { url: "http://web-frontend/auth/logout" }
+
+  # - { url: "http://localhost:4200/pages/home" }
+  # - { url: "http://localhost:4200/auth/login" }
+  # - { url: "http://localhost:4200/pages/airline" }
+  # - { url: "http://localhost:4200/pages/search" }
+  # - { url: "http://localhost:4200/pages/airline" }
+  # - { url: "http://localhost:4200/pages/book" }
+  # - { url: "http://localhost:4200/pages/airline" }
+  # - { url: "http://localhost:4200/pages/track" }
+  # - { url: "http://localhost:4200/pages/airline" }
+  # - { url: "http://localhost:4200/auth/logout" }
