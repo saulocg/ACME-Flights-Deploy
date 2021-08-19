@@ -26,7 +26,7 @@ services:
     container_name: web-frontend
     hostname: web-frontend
     restart: always
-    image: fernandodumont/acme-flights-web-frontend:latest
+    image: fernandodumont/acme-flights-web:latest
     env_file: ./config/appd/controller.env
     expose:
       - 8090
@@ -47,7 +47,7 @@ services:
     container_name: api-manager
     hostname: api-manager
     restart: always
-    image: fernandodumont/acme-flights-java-services:latest
+    image: fernandodumont/acme-flights-java:latest
     expose:
       - 8080
     ports:
@@ -70,7 +70,7 @@ services:
     container_name: auth-services
     hostname: auth-services
     restart: always
-    image: fernandodumont/acme-flights-java-services:latest
+    image: fernandodumont/acme-flights-java:latest
     env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
@@ -81,14 +81,14 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-broker-acme
+      - activemq-broker
       - ldap-acme
 
   flight-services:
     container_name: flight-services
     hostname: flight-services
     restart: always
-    image: fernandodumont/acme-flights-java-services:latest
+    image: fernandodumont/acme-flights-java:latest
     env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
@@ -99,14 +99,14 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-broker-acme
+      - activemq-broker
       - ldap-acme
 
   ticket-services:
     container_name: ticket-services
     hostname: ticket-services
     restart: always
-    image: fernandodumont/acme-flights-java-services:latest
+    image: fernandodumont/acme-flights-java:latest
     env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
@@ -117,14 +117,14 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-broker-acme
+      - activemq-broker
       - ldap-acme
 
   track-services:
     container_name: track-services
     hostname: track-services
     restart: always
-    image: fernandodumont/acme-flights-java-services:latest
+    image: fernandodumont/acme-flights-java:latest
     env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
@@ -135,14 +135,14 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-broker-acme
+      - activemq-broker
       - ldap-acme
 
   activemq-services:
     container_name: activemq-services
     hostname: activemq-services
     restart: always
-    image: fernandodumont/acme-flights-activemq-services:latest
+    image: fernandodumont/acme-flights-activemq:latest
     env_file: ./config/appd/controller.env
     environment:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
@@ -153,14 +153,14 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-broker-acme
+      - activemq-broker
       - ldap-acme
 
   ws-services:
     container_name: ws-services
     hostname: ws-services
     restart: always
-    image: fernandodumont/acme-flights-ws-services:latest
+    image: fernandodumont/acme-flights-ws:latest
     expose:
       - 8081
     ports:
@@ -175,7 +175,24 @@ services:
     depends_on:
       - mongo-acme
       - mysql-acme
-      - activemq-broker-acme
+      - activemq-broker
+      - ldap-acme
+
+  php-services:
+    container_name: php-services
+    hostname: php-services
+    restart: always
+    image: fernandodumont/acme-flights-php:latest
+    env_file: ./config/appd/controller.env
+    environment:
+      - APPDYNAMICS_AGENT_TIER_NAME=php-services
+      - APPDYNAMICS_AGENT_NODE_NAME=php-services-1
+    volumes:
+      - php-agent:/phpproxy
+    depends_on:
+      - mongo-acme
+      - mysql-acme
+      - activemq-broker
       - ldap-acme
 
   ########################################################
@@ -185,20 +202,20 @@ services:
     container_name: sap-services
     hostname: sap-services
     restart: always
-    image: fernandodumont/acme-flights-java-services:latest
+    image: fernandodumont/acme-flights-java:latest
 
   finance-services:
     container_name: finance-services
     hostname: finance-services
     restart: always
-    image: fernandodumont/acme-flights-java-services:latest
+    image: fernandodumont/acme-flights-java:latest
 
   ########################################################
   ### Databases and other backends
   ########################################################
 
   mongo-acme:
-    image: fernandodumont/acme-flights-mongodb:latest
+    image: fernandodumont/acme-flights-mongo:latest
     container_name: mongo-acme
     hostname: mongo-acme
     restart: always
@@ -208,7 +225,7 @@ services:
       - 27017:27017
 
   mysql-acme:
-    image: fernandodumont/acme-flights-mysqldb:latest
+    image: fernandodumont/acme-flights-mysql:latest
     container_name: mysql-acme
     hostname: mysql-acme
     restart: always
@@ -217,10 +234,10 @@ services:
     ports:
       - 3306:3306
 
-  activemq-broker-acme:
-    image: fernandodumont/acme-flights-activemq-broker:latest
-    container_name: activemq-broker-acme
-    hostname: activemq-broker-acme
+  activemq-broker:
+    image: fernandodumont/activemq-broker:latest
+    container_name: activemq-broker
+    hostname: activemq-broker
     restart: always
     expose:
       - 8161
@@ -274,3 +291,4 @@ services:
 
 volumes:
   java-agent:
+  php-agent:
