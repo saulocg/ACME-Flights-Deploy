@@ -183,10 +183,15 @@ services:
     hostname: php-services
     restart: always
     image: fernandodumont/acme-flights-php:latest
+    expose:
+      - 8085
+    ports:
+      - 8085:8085
     env_file: ./config/appd/controller.env
     environment:
       - APPDYNAMICS_AGENT_TIER_NAME=php-services
       - APPDYNAMICS_AGENT_NODE_NAME=php-services-1
+      - WITH_AGENT=1
     volumes:
       - php-agent:/phpproxy
     depends_on:
