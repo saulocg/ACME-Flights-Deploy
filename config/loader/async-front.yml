@@ -1,0 +1,15 @@
+wait: 1
+count: 1
+pages:
+  - { url: "http://async-front:8086/client/retrieve" }
+  - { url: "http://async-front:8086/client/exchange" }
+  - { url: "http://async-front:8086/client/retrieve" }
+  - { url: "http://async-front:8086/client/exchange" }
+  - { url: "http://async-front:8086/client/retrieve" }
+  - { url: "http://async-front:8086/client/exchange" }
+  - { url: "http://async-front:8086/client/retrieve" }
+  - { url: "http://async-front:8086/client/exchange" }
+  - { url: "http://async-front:8086/client/retrieve" }
+  - { url: "http://async-front:8086/client/exchange" }
+  - { url: "http://async-front:8086/client/retrieve" }
+  - { url: "http://async-front:8086/client/exchange" }

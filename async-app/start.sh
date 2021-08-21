@@ -12,7 +12,7 @@ done
 if [ $SKIP_PULL == false ];then
     echo ""
     echo "==> Pulling containers"
-    docker-compose -f docker-compose-async.yml pull
+    docker-compose -f docker-compose.yml pull
 fi
 
-docker-compose -f docker-compose-async.yml up -d
+docker-compose -f docker-compose.yml up -d
