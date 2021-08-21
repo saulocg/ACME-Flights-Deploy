@@ -1,0 +1,330 @@
+version: "3.5"
+
+services:
+  ########################################################
+  ### Loaders
+  ########################################################
+
+  loader-basic:
+    container_name: loader-basic
+    hostname: loader-basic
+    restart: always
+    image: fernandodumont/acme-flights-loaders:latest
+    environment:
+      - ENABLE_BASE_LOAD=1
+      - APPDYNAMICS_CONTROLLER_SSL_ENABLED=false
+    env_file: ../config/appd/controller.env
+    volumes:
+      - ../config/loader/base-load.yml:/app/config/base-load.yml
+    depends_on:
+      api-manager:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  ########################################################
+  ### Web Front End
+  ########################################################
+
+  web-frontend:
+    container_name: web-frontend
+    hostname: web-frontend
+    restart: always
+    image: fernandodumont/acme-flights-web:latest
+    env_file: ../config/appd/controller.env
+    expose:
+      - 8090
+    ports:
+      - 8090:80
+    volumes:
+      - ../config/web-frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ../config/web-frontend/env.js:/usr/share/nginx/html/assets/env.js
+      - ../config/web-frontend/appd.js:/usr/share/nginx/html/assets/appd.js
+    depends_on:
+      api-manager:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  ########################################################
+  ### Java
+  ########################################################
+
+  api-manager:
+    container_name: api-manager
+    hostname: api-manager
+    restart: always
+    image: fernandodumont/acme-flights-java:latest
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    env_file: ../config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=api-manager
+      - APPDYNAMICS_AGENT_NODE_NAME=api-manager-1
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+    depends_on:
+      flight-services:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  flight-services:
+    container_name: flight-services
+    hostname: flight-services
+    restart: always
+    image: fernandodumont/acme-flights-java:latest
+    env_file: ../config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=flight-services
+      - APPDYNAMICS_AGENT_NODE_NAME=flight-services-1
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+    depends_on:
+      ticket-services:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  ticket-services:
+    container_name: ticket-services
+    hostname: ticket-services
+    restart: always
+    image: fernandodumont/acme-flights-java:latest
+    env_file: ../config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=ticket-services
+      - APPDYNAMICS_AGENT_NODE_NAME=ticket-services-1
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+    depends_on:
+      track-services:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  track-services:
+    container_name: track-services
+    hostname: track-services
+    restart: always
+    image: fernandodumont/acme-flights-java:latest
+    env_file: ../config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=track-services
+      - APPDYNAMICS_AGENT_NODE_NAME=track-services-1
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+    depends_on:
+      ws-services:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  activemq-services:
+    container_name: activemq-services
+    hostname: activemq-services
+    restart: always
+    image: fernandodumont/acme-flights-activemq:latest
+    env_file: ../config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=activemq-services
+      - APPDYNAMICS_AGENT_NODE_NAME=activemq-services-1
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+    depends_on:
+      api-manager:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  ws-services:
+    container_name: ws-services
+    hostname: ws-services
+    restart: always
+    image: fernandodumont/acme-flights-ws:latest
+    expose:
+      - 8081
+    ports:
+      - 8081:8081
+    env_file: ../config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_TIER_NAME=ws-services
+      - APPDYNAMICS_AGENT_NODE_NAME=ws-services-1
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+    depends_on:
+      php-services:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  php-services:
+    container_name: php-services
+    hostname: php-services
+    restart: always
+    image: fernandodumont/acme-flights-php:latest
+    expose:
+      - 8085
+    ports:
+      - 8085:8085
+    env_file: ../config/appd/controller.env
+    environment:
+      - APPDYNAMICS_AGENT_TIER_NAME=php-services
+      - APPDYNAMICS_AGENT_NODE_NAME=php-services-1
+      - WITH_AGENT=1
+    volumes:
+      - php-agent:/phpproxy
+    depends_on:
+      sap-services:
+        condition: service_healthy
+      finance-services:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  # ########################################################
+  # ### Mock Services
+  # ########################################################
+  sap-services:
+    container_name: sap-services
+    hostname: sap-services
+    restart: always
+    image: fernandodumont/acme-flights-java:latest
+    environment:
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+    depends_on:
+      - mongo-acme
+      - mysql-acme
+      - activemq-broker
+      - ldap-acme
+    networks:
+      - acme-flights-net
+
+  finance-services:
+    container_name: finance-services
+    hostname: finance-services
+    restart: always
+    image: fernandodumont/acme-flights-java:latest
+    environment:
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+    depends_on:
+      - mongo-acme
+      - mysql-acme
+      - activemq-broker
+      - ldap-acme
+    networks:
+      - acme-flights-net
+
+  ########################################################
+  ### Databases and other backends
+  ########################################################
+
+  mongo-acme:
+    image: fernandodumont/acme-flights-mongo:latest
+    container_name: mongo-acme
+    hostname: mongo-acme
+    restart: always
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+    networks:
+      - acme-flights-net
+
+  mysql-acme:
+    image: fernandodumont/acme-flights-mysql:latest
+    container_name: mysql-acme
+    hostname: mysql-acme
+    restart: always
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+    networks:
+      - acme-flights-net
+
+  activemq-broker:
+    image: fernandodumont/activemq-broker:latest
+    container_name: activemq-broker
+    hostname: activemq-broker
+    restart: always
+    expose:
+      - 8161
+      - 61616
+    ports:
+      - 8161:8161
+      - 61616:61616
+    networks:
+      - acme-flights-net
+
+  ldap-acme:
+    image: bitnami/openldap:latest
+    container_name: ldap-acme
+    hostname: ldap-acme
+    restart: always
+    environment:
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=admin1
+      - LDAP_USERS=acmeflight
+      - LDAP_PASSWORDS=acmeflight1
+    expose:
+      - 1389
+      - 1636
+    ports:
+      - 1389:1389
+      - 1636:1636
+    networks:
+      - acme-flights-net
+
+  ########################################################
+  ### AppDynamics
+  ########################################################
+
+  java-agent:
+    container_name: java-agent
+    hostname: java-agent
+    image: appdynamics/java-agent:latest
+    volumes:
+      - java-agent:/opt/appdynamics
+
+  machine-agent:
+    container_name: machine-agent
+    hostname: machine-agent
+    image: appdynamics/machine-agent-analytics:latest
+    env_file: ../config/appd/controller.env
+    environment:
+      - APPDYNAMICS_SIM_ENABLED=true
+      - APPDYNAMICS_DOCKER_ENABLED=true
+      - ../config/certificates/cacerts-ma:/usr/local/openjdk-8/lib/security/cacerts
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /:/hostroot:ro
+    expose:
+      - 9090
+    depends_on:
+      api-manager:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+volumes:
+  java-agent:
+  php-agent:
+
+networks:
+  acme-flights-net:
