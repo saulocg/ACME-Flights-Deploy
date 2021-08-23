@@ -205,7 +205,7 @@ services:
       - WITH_AGENT=1
     volumes:
       - php-agent:/phpproxy
-      - ../config/certificates/cacerts-java:/opt/appdynamics/appdynamics-php-agent/proxy/jre/lib/security
+      - ../config/certificates/cacerts-java:/opt/appdynamics/appdynamics-php-agent/proxy/jre/lib/security/cacerts
     depends_on:
       sap-services:
         condition: service_healthy
