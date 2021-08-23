@@ -22,6 +22,23 @@ services:
     networks:
       - acme-flights-net
 
+  loader-usecaes:
+    container_name: loader-usecaes
+    hostname: loader-usecaes
+    restart: always
+    image: fernandodumont/acme-flights-loaders:latest
+    environment:
+      - ENABLE_USE_CASES_LOAD=1
+      - APPDYNAMICS_CONTROLLER_SSL_ENABLED=false
+    env_file: ../config/appd/controller.env
+    volumes:
+      - ../config/loader/base-load.yml:/app/config/use-cases.yml
+    depends_on:
+      api-manager:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
   ########################################################
   ### Web Front End
   ########################################################
@@ -83,9 +100,9 @@ services:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=flight-services
       - APPDYNAMICS_AGENT_NODE_NAME=flight-services-1
-      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     volumes:
       - java-agent:/opt/appdynamics/java-agent/
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       ticket-services:
         condition: service_healthy
@@ -102,9 +119,9 @@ services:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=ticket-services
       - APPDYNAMICS_AGENT_NODE_NAME=ticket-services-1
-      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     volumes:
       - java-agent:/opt/appdynamics/java-agent/
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       track-services:
         condition: service_healthy
@@ -121,9 +138,9 @@ services:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=track-services
       - APPDYNAMICS_AGENT_NODE_NAME=track-services-1
-      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     volumes:
       - java-agent:/opt/appdynamics/java-agent/
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       ws-services:
         condition: service_healthy
@@ -140,9 +157,9 @@ services:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=activemq-services
       - APPDYNAMICS_AGENT_NODE_NAME=activemq-services-1
-      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     volumes:
       - java-agent:/opt/appdynamics/java-agent/
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       api-manager:
         condition: service_healthy
@@ -163,9 +180,9 @@ services:
       - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
       - APPDYNAMICS_AGENT_TIER_NAME=ws-services
       - APPDYNAMICS_AGENT_NODE_NAME=ws-services-1
-      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     volumes:
       - java-agent:/opt/appdynamics/java-agent/
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       php-services:
         condition: service_healthy
@@ -188,6 +205,7 @@ services:
       - WITH_AGENT=1
     volumes:
       - php-agent:/phpproxy
+      - ../config/certificates/cacerts-java:/opt/appdynamics/appdynamics-php-agent/proxy/jre/lib/security
     depends_on:
       sap-services:
         condition: service_healthy
@@ -204,7 +222,7 @@ services:
     hostname: sap-services
     restart: always
     image: fernandodumont/acme-flights-java:latest
-    environment:
+    volumes:
       - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       - mongo-acme
@@ -219,7 +237,7 @@ services:
     hostname: finance-services
     restart: always
     image: fernandodumont/acme-flights-java:latest
-    environment:
+    volumes:
       - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       - mongo-acme
@@ -309,11 +327,11 @@ services:
     environment:
       - APPDYNAMICS_SIM_ENABLED=true
       - APPDYNAMICS_DOCKER_ENABLED=true
-      - ../config/certificates/cacerts-ma:/usr/local/openjdk-8/lib/security/cacerts
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - /var/run/docker.sock:/var/run/docker.sock
       - /:/hostroot:ro
+      - ../config/certificates/cacerts-ma:/usr/local/openjdk-8/lib/security/cacerts
     expose:
       - 9090
     depends_on:

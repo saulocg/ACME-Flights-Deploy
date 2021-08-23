@@ -42,6 +42,7 @@ services:
       - APPDYNAMICS_AGENT_APPLICATION_NAME=ASYNC_APP
     volumes:
       - java-agent-async:/opt/appdynamics/java-agent/
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       async-back:
         condition: service_healthy
@@ -67,6 +68,7 @@ services:
       - APPDYNAMICS_AGENT_APPLICATION_NAME=ASYNC_APP
     volumes:
       - java-agent-async:/opt/appdynamics/java-agent/
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       - mongo-async
     networks:
