@@ -8,7 +8,7 @@ services:
   loader-basic:
     container_name: loader-basic
     hostname: loader-basic
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-loaders:latest
     environment:
       - ENABLE_BASE_LOAD=1
@@ -25,7 +25,7 @@ services:
   loader-use-case:
     container_name: loader-use-case
     hostname: loader-use-case
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-loaders:latest
     environment:
       - ENABLE_USE_CASES_LOAD=1
@@ -46,7 +46,7 @@ services:
   web-frontend:
     container_name: web-frontend
     hostname: web-frontend
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-web:latest
     env_file: ../config/appd/controller.env
     expose:
@@ -70,7 +70,7 @@ services:
   api-manager:
     container_name: api-manager
     hostname: api-manager
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-java:latest
     expose:
       - 8080
@@ -93,7 +93,7 @@ services:
   flight-services:
     container_name: flight-services
     hostname: flight-services
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-java:latest
     env_file: ../config/appd/controller.env
     environment:
@@ -112,7 +112,7 @@ services:
   ticket-services:
     container_name: ticket-services
     hostname: ticket-services
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-java:latest
     env_file: ../config/appd/controller.env
     environment:
@@ -131,7 +131,7 @@ services:
   track-services:
     container_name: track-services
     hostname: track-services
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-java:latest
     env_file: ../config/appd/controller.env
     environment:
@@ -150,7 +150,7 @@ services:
   activemq-services:
     container_name: activemq-services
     hostname: activemq-services
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-activemq:latest
     env_file: ../config/appd/controller.env
     environment:
@@ -169,7 +169,7 @@ services:
   ws-services:
     container_name: ws-services
     hostname: ws-services
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-ws:latest
     expose:
       - 8081
@@ -192,7 +192,7 @@ services:
   php-services:
     container_name: php-services
     hostname: php-services
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-php:latest
     expose:
       - 8085
@@ -202,7 +202,7 @@ services:
     environment:
       - APPDYNAMICS_AGENT_TIER_NAME=php-services
       - APPDYNAMICS_AGENT_NODE_NAME=php-services-1
-      - WITH_AGENT=1
+      - WITH_AGENT=0
     volumes:
       - php-agent:/phpproxy
       - ../config/certificates/cacerts-java:/opt/appdynamics/appdynamics-php-agent/proxy/jre/lib/security/cacerts
@@ -220,7 +220,7 @@ services:
   sap-services:
     container_name: sap-services
     hostname: sap-services
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-java:latest
     volumes:
       - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
@@ -235,7 +235,7 @@ services:
   finance-services:
     container_name: finance-services
     hostname: finance-services
-    restart: always
+    restart: on-failure
     image: fernandodumont/acme-flights-java:latest
     volumes:
       - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
@@ -255,7 +255,7 @@ services:
     image: fernandodumont/acme-flights-mongo:latest
     container_name: mongo-acme
     hostname: mongo-acme
-    restart: always
+    restart: on-failure
     expose:
       - 27017
     ports:
@@ -267,7 +267,7 @@ services:
     image: fernandodumont/acme-flights-mysql:latest
     container_name: mysql-acme
     hostname: mysql-acme
-    restart: always
+    restart: on-failure
     expose:
       - 3306
     ports:
@@ -279,7 +279,7 @@ services:
     image: fernandodumont/activemq-broker:latest
     container_name: activemq-broker
     hostname: activemq-broker
-    restart: always
+    restart: on-failure
     expose:
       - 8161
       - 61616
@@ -293,7 +293,7 @@ services:
     image: bitnami/openldap:latest
     container_name: ldap-acme
     hostname: ldap-acme
-    restart: always
+    restart: on-failure
     environment:
       - LDAP_ADMIN_USERNAME=admin
       - LDAP_ADMIN_PASSWORD=admin1
