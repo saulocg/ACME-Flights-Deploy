@@ -22,9 +22,9 @@ services:
     networks:
       - acme-flights-net
 
-  loader-usecaes:
-    container_name: loader-usecaes
-    hostname: loader-usecaes
+  loader-use-case:
+    container_name: loader-use-case
+    hostname: loader-use-case
     restart: always
     image: fernandodumont/acme-flights-loaders:latest
     environment:
@@ -32,7 +32,7 @@ services:
       - APPDYNAMICS_CONTROLLER_SSL_ENABLED=false
     env_file: ../config/appd/controller.env
     volumes:
-      - ../config/loader/base-load.yml:/app/config/use-cases.yml
+      - ../config/loader/use-cases.yml:/app/config/use-cases.yml
     depends_on:
       api-manager:
         condition: service_healthy
