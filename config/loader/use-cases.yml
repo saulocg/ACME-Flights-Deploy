@@ -8,8 +8,8 @@ useCases:
   - {
       "urlCheck": "/api/flight/useCase/UC_AIRLINE_DETAIL_TIMEOUT",
       "urlRun": "/api/airportDetails/BSB",
-      "waitTime": 50,
-      "count": 5,
+      "waitTime": 500,
+      "count": 1,
     }
   - {
       "urlCheck": "/api/track/useCase/UC_ADD_TRACK_SLEEP",
