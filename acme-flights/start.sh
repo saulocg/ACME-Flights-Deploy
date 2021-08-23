@@ -1,11 +1,11 @@
 #!/bin/bash
 
-SKIP_PULL=true
+SKIP_PULL=false
 
 for ARGUMENT in "$@"
 do
     if [ "$ARGUMENT" = "--pull" ]; then
-        SKIP_PULL=false
+        SKIP_PULL=true
     fi
 done
 
