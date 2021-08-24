@@ -202,7 +202,7 @@ services:
     environment:
       - APPDYNAMICS_AGENT_TIER_NAME=php-services
       - APPDYNAMICS_AGENT_NODE_NAME=php-services-1
-      - WITH_AGENT=0
+      - WITH_AGENT=1
     volumes:
       - php-agent:/phpproxy
       - ../config/certificates/cacerts-java:/opt/appdynamics/appdynamics-php-agent/proxy/jre/lib/security/cacerts
