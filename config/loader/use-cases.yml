@@ -1,18 +1,18 @@
 useCases:
   - {
-      "urlCheck": "/api/useCase/UC_CALL_MANY_TICKET_CLASS",
+      "urlCheck": "/api/useCase/UC_CALL_MANY_TICKET_CLASS/api-manager",
       "urlRun": "/api/ticketClasses",
       "waitTime": 500,
       "count": 1,
     }
   - {
-      "urlCheck": "/api/flight/useCase/UC_AIRLINE_DETAIL_TIMEOUT",
+      "urlCheck": "/api/useCase/UC_AIRLINE_DETAIL_TIMEOUT/flight-services",
       "urlRun": "/api/airportDetails/BSB",
-      "waitTime": 500,
-      "count": 1,
+      "waitTime": 50,
+      "count": 5,
     }
   - {
-      "urlCheck": "/api/track/useCase/UC_ADD_TRACK_SLEEP",
+      "urlCheck": "/api/useCase/UC_ADD_TRACK_SLEEP/track-services",
       "urlRun": "/api/searchBookFlight/no@email.com",
       "waitTime": 2000,
       "count": 2,
