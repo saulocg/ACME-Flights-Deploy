@@ -1,0 +1,124 @@
+version: "3.5"
+
+services:
+
+  ########################################################
+  ### APPLICATION
+  ########################################################
+
+  sqlserver-application:
+    container_name: sqlserver-application
+    hostname: sqlserver-application
+    restart: on-failure
+    image: fernandodumont/sqlserver-application:latest
+    depends_on: 
+      - sqlserver
+    env_file: ../config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_APPLICATION_NAME=DATABASES_APPLICATION
+      - APPDYNAMICS_AGENT_TIER_NAME=sqlserver-app
+      - APPDYNAMICS_AGENT_NODE_NAME=sqlserver-app-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+
+  postgresql-application:
+    container_name: postgresql-application
+    hostname: postgresql-application
+    restart: on-failure
+    image: fernandodumont/postgresql-application:latest
+    depends_on: 
+      - postgresql
+    env_file: ../config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_APPLICATION_NAME=DATABASES_APPLICATION
+      - APPDYNAMICS_AGENT_TIER_NAME=postgresql-app
+      - APPDYNAMICS_AGENT_NODE_NAME=postgresql-app-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+
+  oracle-application:
+    container_name: oracle-application
+    hostname: oracle-application
+    restart: on-failure
+    image: fernandodumont/oracle-application:latest
+    depends_on: 
+      - oracle
+    env_file: ../config/appd/controller.env
+    environment:
+      - JAVA_TOOL_OPTIONS=-javaagent:/opt/appdynamics/java-agent/javaagent.jar
+      - APPDYNAMICS_AGENT_APPLICATION_NAME=DATABASES_APPLICATION
+      - APPDYNAMICS_AGENT_TIER_NAME=oracle-app
+      - APPDYNAMICS_AGENT_NODE_NAME=oracle-app-1
+    volumes:
+      - java-agent:/opt/appdynamics/java-agent/
+      - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
+      
+  ########################################################
+  ### DATABASE
+  ########################################################
+
+  oracle:
+    container_name: oracle
+    hostname: oracle
+    restart: on-failure
+    image: fernandodumont/databases-oracle:latest
+    environment:
+      - ORACLE_PWD=appd
+      - ORACLE_CHARACTERSET=AL32UTF8
+    volumes:
+      - ./oracle/oradata:/opt/oracle/oradata
+      - ./oracle/scripts/startup:/opt/oracle/scripts/startup
+    expose:
+      - 1521
+      - 5500
+    ports:
+      - 1521:1521
+      - 5500:5500
+
+  sqlserver:
+    container_name: sqlserver
+    hostname: sqlserver
+    restart: on-failure
+    image: fernandodumont/databases-sqlserver:latest
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password1!
+    expose:
+      - 1433
+      - 1401
+    ports:
+      - 1433:1433
+      - 1401:1401
+
+  postgresql:
+    container_name: postgresql
+    hostname: postgresql
+    restart: on-failure
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=acme
+      - POSTGRES_PASSWORD=appd
+    volumes:
+      - ./postgresql/init-database.sh:/docker-entrypoint-initdb.d/init-database.sh
+    expose:
+      - 5432
+    ports:
+      - 5432:5432
+
+  ########################################################
+  ### AppDynamics
+  ########################################################
+
+  java-agent:
+    container_name: java-agent
+    hostname: java-agent
+    image: appdynamics/java-agent:latest
+    volumes:
+      - java-agent:/opt/appdynamics
+
+volumes:
+  java-agent:
