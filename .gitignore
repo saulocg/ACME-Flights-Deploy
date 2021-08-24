@@ -24,4 +24,5 @@ HELP.md
 # **/java-services.jar
 
 ### DATABAES ###
-oradata
+dbconfig
+XE
