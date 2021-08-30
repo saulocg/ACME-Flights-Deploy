@@ -1,0 +1,181 @@
+version: "3.5"
+
+services:
+  ########################################################
+  ### Web Front End
+  ########################################################
+
+  web-frontend:
+    container_name: web-frontend
+    hostname: web-frontend
+    restart: on-failure
+    image: fernandodumont/acme-flights-web:latest
+    expose:
+      - 8090
+    ports:
+      - 8090:80
+    volumes:
+      - ../config/web-frontend/env.js:/usr/share/nginx/html/assets/env.js
+      - ../config/web-frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      api-manager:
+        condition: service_healthy
+
+  ########################################################
+  ### Java
+  ########################################################
+
+  api-manager:
+    container_name: api-manager
+    hostname: api-manager
+    restart: on-failure
+    image: fernandodumont/acme-flights-java:latest
+    expose:
+      - 8080
+    ports:
+      - 8080:8080
+    depends_on:
+      flight-services:
+        condition: service_healthy
+
+  flight-services:
+    container_name: flight-services
+    hostname: flight-services
+    restart: on-failure
+    image: fernandodumont/acme-flights-java:latest
+    depends_on:
+      ticket-services:
+        condition: service_healthy
+
+  ticket-services:
+    container_name: ticket-services
+    hostname: ticket-services
+    restart: on-failure
+    image: fernandodumont/acme-flights-java:latest
+    depends_on:
+      track-services:
+        condition: service_healthy
+
+  track-services:
+    container_name: track-services
+    hostname: track-services
+    restart: on-failure
+    image: fernandodumont/acme-flights-java:latest
+    depends_on:
+      ws-services:
+        condition: service_healthy
+
+  activemq-services:
+    container_name: activemq-services
+    hostname: activemq-services
+    restart: on-failure
+    image: fernandodumont/acme-flights-activemq:latest
+    depends_on:
+      api-manager:
+        condition: service_healthy
+
+  ws-services:
+    container_name: ws-services
+    hostname: ws-services
+    restart: on-failure
+    image: fernandodumont/acme-flights-ws:latest
+    expose:
+      - 8081
+    ports:
+      - 8081:8081
+    depends_on:
+      php-services:
+        condition: service_healthy
+
+  php-services:
+    container_name: php-services
+    hostname: php-services
+    restart: on-failure
+    image: fernandodumont/acme-flights-php:latest
+    expose:
+      - 8085
+    ports:
+      - 8085:8085
+    depends_on:
+      sap-services:
+        condition: service_healthy
+      finance-services:
+        condition: service_healthy
+
+  # ########################################################
+  # ### Mock Services
+  # ########################################################
+  sap-services:
+    container_name: sap-services
+    hostname: sap-services
+    restart: on-failure
+    image: fernandodumont/acme-flights-java:latest
+    depends_on:
+      - mongo-acme
+      - mysql-acme
+      - activemq-broker
+      - ldap-acme
+
+  finance-services:
+    container_name: finance-services
+    hostname: finance-services
+    restart: on-failure
+    image: fernandodumont/acme-flights-java:latest
+    depends_on:
+      - mongo-acme
+      - mysql-acme
+      - activemq-broker
+      - ldap-acme
+
+  ########################################################
+  ### Databases and other backends
+  ########################################################
+
+  mongo-acme:
+    image: fernandodumont/acme-flights-mongo:latest
+    container_name: mongo-acme
+    hostname: mongo-acme
+    restart: on-failure
+    expose:
+      - 27017
+    ports:
+      - 27017:27017
+
+  mysql-acme:
+    image: fernandodumont/acme-flights-mysql:latest
+    container_name: mysql-acme
+    hostname: mysql-acme
+    restart: on-failure
+    expose:
+      - 3306
+    ports:
+      - 3306:3306
+
+  activemq-broker:
+    image: fernandodumont/activemq-broker:latest
+    container_name: activemq-broker
+    hostname: activemq-broker
+    restart: on-failure
+    expose:
+      - 8161
+      - 61616
+    ports:
+      - 8161:8161
+      - 61616:61616
+
+  ldap-acme:
+    image: bitnami/openldap:latest
+    container_name: ldap-acme
+    hostname: ldap-acme
+    restart: on-failure
+    environment:
+      - LDAP_ADMIN_USERNAME=admin
+      - LDAP_ADMIN_PASSWORD=admin1
+      - LDAP_USERS=acmeflight
+      - LDAP_PASSWORDS=acmeflight1
+    expose:
+      - 1389
+      - 1636
+    ports:
+      - 1389:1389
+      - 1636:1636
