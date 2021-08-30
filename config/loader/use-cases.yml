@@ -17,3 +17,9 @@ useCases:
       "waitTime": 2000,
       "count": 2,
     }
+  - {
+      "urlCheck": "/api/useCase/UC_ERROR_INSERT_QUERY/track-services",
+      "urlRun": "/api/track/error-db/no@email.com",
+      "waitTime": 2000,
+      "count": 2,
+    }
