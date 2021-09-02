@@ -1,0 +1,98 @@
+[
+  {
+    "title": "Item 06, Item 47",
+    "description": "Gerar erro de Javascript, irá abrir nova janela",
+    "function": "this.uc06()",
+    "buttonValue": "Gerar erro",
+    "isLoading": false,
+    "error": ""
+  },
+  {
+    "title": "Item 07, Item 10, Item 59, Item 68",
+    "description":
+      "O Remote Service /mock/external/finance/check ficará com timeout de 25 segundos na resposta. Este serviço é chamado ao fazer checkout. A HR 'Use Case 59' irá gerar evento.",
+    "buttonValue": "TURN ON",
+    "url": "/useCase/UC_MOCK_FINANCE_CHECK_TIMEOUT/finance-services",
+    "value": "25000",
+    "enabled": false,
+    "isLoading": false,
+    "error": ""
+  },
+  {
+    "title": "Item 08, Item 10",
+    "description":
+      "O api-manager gravará track 20 vezes com delay de 500ms para cada track, em todas requisições de searchForFlights com Ticket Class iguais a First Class. Este serviço é chamado ao fazer pesquisa de vôos.",
+    "buttonValue": "TURN ON",
+    "url": "/useCase/UC_INSERT_MANY_LOGS/api-manager",
+    "value": "500",
+    "enabled": false,
+    "isLoading": false,
+    "error": ""
+  },
+  {
+    "title": "Item 56",
+    "description":
+      "Chamada da API /api/ticketClass diversas vezes com intervalo de 500ms entre as chamadas. A HR 'Use Case 56' irá gerar o evento.",
+    "buttonValue": "TURN ON",
+    "url": "/useCase/UC_CALL_MANY_TICKET_CLASS/api-manager",
+    "value": "500",
+    "enabled": false,
+    "isLoading": false,
+    "error": ""
+  },
+  {
+    "title": "Item 66, Item 68",
+    "description":
+      "Chamada da API /api/airportDetails diversas vezes e timeout aleatório na API entre 500ms e 10s.",
+    "buttonValue": "TURN ON",
+    "url": "/useCase/UC_AIRLINE_DETAIL_TIMEOUT/flight-services",
+    "value": "10000",
+    "enabled": false,
+    "isLoading": false,
+    "error": ""
+  },
+  {
+    "title": "Item 67, Item 68",
+    "description":
+      "A gravação de track (log) terá timeout aleatório entre 1s e 5s para 25% das requisições.",
+    "buttonValue": "TURN ON",
+    "url": "/useCase/UC_ADD_TRACK_SLEEP/track-services",
+    "value": "5000",
+    "enabled": false,
+    "isLoading": false,
+    "error": ""
+  },
+  {
+    "title": "Item 117 - Exception",
+    "description":
+      "Gera exception ao buscar Log (Track no menu). O erro gerado é uma chamada POST em uma API GET gerando o erro 405.",
+    "buttonValue": "TURN ON",
+    "url": "/useCase/UC_EXCEPTION_CODE/api-manager",
+    "value": "ON",
+    "enabled": false,
+    "isLoading": false,
+    "error": ""
+  },
+  {
+    "title": "Item 117 - JVM Crash",
+    "description":
+      "==> CUIDADO!!!!! <== Vai gerar JVM Crash e o container principal (api-manager) vai cair, será reiniciado automaticamente pelo docker-compose!",
+    "buttonValue": "TURN ON",
+    "url": "/useCase/UC_JVM_CRASH/api-manager",
+    "value": "ON",
+    "enabled": false,
+    "isLoading": false,
+    "error": ""
+  },
+  {
+    "title": "Item 83 - Erro na query",
+    "description":
+      "O robô irá executar a API /api/track/error-db",
+    "buttonValue": "TURN ON",
+    "url": "/useCase/UC_ERROR_INSERT_QUERY/track-services",
+    "value": "ON",
+    "enabled": false,
+    "isLoading": false,
+    "error": ""
+  }
+]

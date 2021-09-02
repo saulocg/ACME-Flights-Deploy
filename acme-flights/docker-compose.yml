@@ -57,6 +57,7 @@ services:
       - ../config/web-frontend/nginx.conf:/etc/nginx/conf.d/default.conf
       - ../config/web-frontend/env.js:/usr/share/nginx/html/assets/env.js
       - ../config/web-frontend/appd.js:/usr/share/nginx/html/assets/appd.js
+      - ../config/web-frontend/use-cases.json:/usr/share/nginx/html/assets/use-cases.json
     depends_on:
       api-manager:
         condition: service_healthy
