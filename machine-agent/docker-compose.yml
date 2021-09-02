@@ -1,0 +1,26 @@
+version: "3.5"
+
+services:
+
+  ########################################################
+  ### AppDynamics
+  ########################################################
+
+  machine-agent:
+    container_name: machine-agent
+    hostname: machine-agent
+    image: appdynamics/machine-agent-analytics:latest
+    env_file: ../config/appd/controller.env
+    environment:
+      - APPDYNAMICS_SIM_ENABLED=true
+      - APPDYNAMICS_DOCKER_ENABLED=false
+      # - APPDYNAMICS_AGENT_APPLICATION_NAME=Shopizer
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /:/hostroot:ro
+      - ../config/certificates/cacerts-ma:/usr/local/openjdk-8/lib/security/cacerts
+    expose:
+      - 9090
+
+
