@@ -1,11 +1,11 @@
 #!/bin/bash
 
-SKIP_PULL=false
+SKIP_PULL=true
 
 for ARGUMENT in "$@"
 do
     if [ "$ARGUMENT" = "--pull" ]; then
-        SKIP_PULL=true
+        SKIP_PULL=false
     fi
 done
 
@@ -16,6 +16,5 @@ if [ $SKIP_PULL == false ];then
 fi
 
 mkdir -p oracle/oradata
-chmod 777 -R oracle/oradata
 
 docker-compose -f docker-compose.yml up -d
