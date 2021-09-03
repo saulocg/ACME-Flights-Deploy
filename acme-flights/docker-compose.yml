@@ -83,7 +83,7 @@ services:
       - APPDYNAMICS_AGENT_TIER_NAME=api-manager
       - APPDYNAMICS_AGENT_NODE_NAME=api-manager-1
     volumes:
-      - java-agent:/opt/appdynamics/java-agent/
+      - java-agent-acme:/opt/appdynamics/java-agent/
       - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       flight-services:
@@ -102,7 +102,7 @@ services:
       - APPDYNAMICS_AGENT_TIER_NAME=flight-services
       - APPDYNAMICS_AGENT_NODE_NAME=flight-services-1
     volumes:
-      - java-agent:/opt/appdynamics/java-agent/
+      - java-agent-acme:/opt/appdynamics/java-agent/
       - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       ticket-services:
@@ -121,7 +121,7 @@ services:
       - APPDYNAMICS_AGENT_TIER_NAME=ticket-services
       - APPDYNAMICS_AGENT_NODE_NAME=ticket-services-1
     volumes:
-      - java-agent:/opt/appdynamics/java-agent/
+      - java-agent-acme:/opt/appdynamics/java-agent/
       - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       track-services:
@@ -140,7 +140,7 @@ services:
       - APPDYNAMICS_AGENT_TIER_NAME=track-services
       - APPDYNAMICS_AGENT_NODE_NAME=track-services-1
     volumes:
-      - java-agent:/opt/appdynamics/java-agent/
+      - java-agent-acme:/opt/appdynamics/java-agent/
       - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       ws-services:
@@ -159,7 +159,7 @@ services:
       - APPDYNAMICS_AGENT_TIER_NAME=activemq-services
       - APPDYNAMICS_AGENT_NODE_NAME=activemq-services-1
     volumes:
-      - java-agent:/opt/appdynamics/java-agent/
+      - java-agent-acme:/opt/appdynamics/java-agent/
       - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       api-manager:
@@ -182,13 +182,17 @@ services:
       - APPDYNAMICS_AGENT_TIER_NAME=ws-services
       - APPDYNAMICS_AGENT_NODE_NAME=ws-services-1
     volumes:
-      - java-agent:/opt/appdynamics/java-agent/
+      - java-agent-acme:/opt/appdynamics/java-agent/
       - ../config/certificates/cacerts-java:/usr/local/openjdk-15/lib/security/cacerts
     depends_on:
       php-services:
         condition: service_healthy
     networks:
       - acme-flights-net
+
+  ########################################################
+  ### PHP
+  ########################################################
 
   php-services:
     container_name: php-services
@@ -205,7 +209,7 @@ services:
       - APPDYNAMICS_AGENT_NODE_NAME=php-services-1
       - WITH_AGENT=1
     volumes:
-      - php-agent:/phpproxy
+      - php-agent-acme:/phpproxy
       - ../config/certificates/cacerts-java:/opt/appdynamics/appdynamics-php-agent/proxy/jre/lib/security/cacerts
     depends_on:
       sap-services:
@@ -218,6 +222,7 @@ services:
   # ########################################################
   # ### Mock Services
   # ########################################################
+  
   sap-services:
     container_name: sap-services
     hostname: sap-services
@@ -313,16 +318,16 @@ services:
   ### AppDynamics
   ########################################################
 
-  java-agent:
-    container_name: java-agent
-    hostname: java-agent
+  java-agent-acme:
+    container_name: java-agent-acme
+    hostname: java-agent-acme
     image: appdynamics/java-agent:latest
     volumes:
-      - java-agent:/opt/appdynamics
+      - java-agent-acme:/opt/appdynamics
 
-  machine-agent:
-    container_name: machine-agent
-    hostname: machine-agent
+  machine-agent-acme:
+    container_name: machine-agent-acme
+    hostname: machine-agent-acme
     image: appdynamics/machine-agent-analytics:latest
     env_file: ../config/appd/controller.env
     environment:
@@ -342,8 +347,8 @@ services:
       - acme-flights-net
 
 volumes:
-  java-agent:
-  php-agent:
+  java-agent-acme:
+  php-agent-acme:
 
 networks:
   acme-flights-net:
