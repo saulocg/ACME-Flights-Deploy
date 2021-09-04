@@ -29,3 +29,10 @@ useCases:
       "waitTime": 100,
       "count": 1,
     }
+  - {
+      "urlCheck": "/api/useCase/UC_ONLY_ONE_BT/api-manager",
+      "urlRun": "/api/airlines",
+      "waitTime": 30000,
+      "count": 10,
+    }
+]
