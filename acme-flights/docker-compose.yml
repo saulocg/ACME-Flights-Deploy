@@ -33,6 +33,7 @@ services:
     env_file: ../config/appd/controller.env
     volumes:
       - ../config/loader/use-cases.yml:/app/config/use-cases.yml
+      - ./pipe:/hostpipe
     depends_on:
       api-manager:
         condition: service_healthy
@@ -212,10 +213,10 @@ services:
       - php-agent-acme:/phpproxy
       - ../config/certificates/cacerts-java:/opt/appdynamics/appdynamics-php-agent/proxy/jre/lib/security/cacerts
     depends_on:
-      sap-services:
-        condition: service_healthy
-      finance-services:
-        condition: service_healthy
+      - mongo-acme
+      - mysql-acme
+      - activemq-broker
+      - ldap-acme
     networks:
       - acme-flights-net
 

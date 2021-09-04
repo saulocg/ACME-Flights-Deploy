@@ -15,4 +15,10 @@ if [ $SKIP_PULL == false ];then
     docker-compose -f docker-compose.yml pull
 fi
 
+PIPE=`ps -ef | grep -v color | grep -v grep | grep pipe.sh | awk '{print $2}'`
+if [[ ! -z $PIPE ]]; then
+    kill -9 $PIPE
+fi
+./pipe.sh &
+
 docker-compose -f docker-compose.yml up -d

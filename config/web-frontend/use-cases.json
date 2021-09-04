@@ -94,5 +94,16 @@
     "enabled": false,
     "isLoading": false,
     "error": ""
+  },
+  {
+    "title": "Item 63 - Restart gerando problema",
+    "description":
+      "O robô irá parar e iniciar o container flight-services e em seguida enviar diveras requisições para a BT /api/ticketClass, elevando seu Load, ART e associando ao evento de restart.",
+    "buttonValue": "TURN ON",
+    "url": "/useCase/UC_SPIKE_TICKET_CLASS/api-manager",
+    "value": "ON",
+    "enabled": false,
+    "isLoading": false,
+    "error": ""
   }
 ]
