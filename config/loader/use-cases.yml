@@ -35,3 +35,6 @@ useCases:
       "waitTime": 30000,
       "count": 10,
     }
+  - {
+      "urlCheck": "/api/useCase/UC_STOP_LOADER_BASIC/api-manager",
+    }    
