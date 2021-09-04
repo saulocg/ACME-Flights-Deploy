@@ -109,7 +109,7 @@
   {
     "title": "Item 53 - Garantia de 100% monitorado",
     "description":
-      "O robô irá parar todos os processos dele e executar apenas a chamada da BT /api/airlines, executando 10 requisições a cada 30 segundos. Obs.: as APIs de HealCheck não tem como evitar, sempre serão executadas internamente pelo seu próprio container.",
+      "O robô irá parar todos os processos dele e executar apenas a chamada da BT /api/airlines, executando 30 requisições a cada 60 segundos. Obs.: as APIs de HealCheck não tem como evitar, sempre serão executadas internamente pelo seu próprio container.",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_ONLY_ONE_BT/api-manager",
     "value": "ON",

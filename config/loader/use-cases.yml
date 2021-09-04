@@ -32,8 +32,8 @@ useCases:
   - {
       "urlCheck": "/api/useCase/UC_ONLY_ONE_BT/api-manager",
       "urlRun": "/api/airlines",
-      "waitTime": 30000,
-      "count": 10,
+      "waitTime": 60000,
+      "count": 30,
     }
   - {
       "urlCheck": "/api/useCase/UC_STOP_LOADER_BASIC/api-manager",
