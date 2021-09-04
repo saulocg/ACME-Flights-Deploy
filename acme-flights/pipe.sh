@@ -4,6 +4,7 @@
 # Criando pipe parar receber comandos do container e executar no host
 rm -rf "$PWD/pipe"
 mkdir -p "$PWD/pipe"
+touch "$PWD/pipe/acme.log"
 mkfifo "$PWD/pipe/acme"
 chmod 777 -R "$PWD/pipe"
 
