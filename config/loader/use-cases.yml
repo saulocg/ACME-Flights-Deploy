@@ -24,7 +24,7 @@ useCases:
       "count": 2,
     }
   - {
-      "urlCheck": "/api/useCase/UC_SPIKE_TICKET_CLASS/api-manager",
+      "urlCheck": "/api/useCase/UC_SPIKE_TICKET_CLASS/flight-services",
       "urlRun": "/api/ticketClasses",
       "waitTime": 100,
       "count": 1,
