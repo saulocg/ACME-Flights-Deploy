@@ -27,5 +27,5 @@ useCases:
       "urlCheck": "/api/useCase/UC_SPIKE_TICKET_CLASS/api-manager",
       "urlRun": "/api/ticketClasses",
       "waitTime": 100,
-      "count": 2,
+      "count": 1,
     }
