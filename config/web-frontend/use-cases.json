@@ -98,7 +98,7 @@
   {
     "title": "Item 63 - Restart gerando problema",
     "description":
-      "O robô irá parar e iniciar o container flight-services e em seguida enviar diveras requisições para a BT /api/ticketClass, elevando seu Load, ART e associando ao evento de restart.",
+      "O robô irá parar e iniciar o container api-manager e em seguida enviar diveras requisições para a BT /api/ticketClass, elevando seu Load e gerando dois eventos, um de restart e outro de BT.",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_SPIKE_TICKET_CLASS/flight-services",
     "value": "ON",
