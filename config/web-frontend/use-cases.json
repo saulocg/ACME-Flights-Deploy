@@ -122,7 +122,7 @@
     "description":
       "Parar o robô que simula navegação básica do usuário pelo Browser",
     "buttonValue": "TURN ON",
-    "url": "/api/useCase/UC_STOP_LOADER_BASIC/api-manager",
+    "url": "/useCase/UC_STOP_LOADER_BASIC/api-manager",
     "value": "ON",
     "enabled": false,
     "isLoading": false,
