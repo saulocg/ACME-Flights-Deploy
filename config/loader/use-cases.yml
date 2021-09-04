@@ -35,4 +35,3 @@ useCases:
       "waitTime": 30000,
       "count": 10,
     }
-]
