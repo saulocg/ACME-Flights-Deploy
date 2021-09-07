@@ -9,8 +9,7 @@
   },
   {
     "title": "Item 07, Item 10, Item 59, Item 68",
-    "description":
-      "O Remote Service /mock/external/finance/check ficará com timeout de 25 segundos na resposta. Este serviço é chamado ao fazer checkout. A HR 'Use Case 59' irá gerar evento.",
+    "description": "O Remote Service /mock/external/finance/check ficará com timeout de 25 segundos na resposta. Este serviço é chamado ao fazer checkout. A HR 'Use Case 59' irá gerar evento.",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_MOCK_FINANCE_CHECK_TIMEOUT/finance-services",
     "value": "25000",
@@ -20,8 +19,7 @@
   },
   {
     "title": "Item 08, Item 10",
-    "description":
-      "O api-manager gravará track 20 vezes com delay de 500ms para cada track, em todas requisições de searchForFlights com Ticket Class iguais a First Class. Este serviço é chamado ao fazer pesquisa de vôos.",
+    "description": "O api-manager gravará track 20 vezes com delay de 500ms para cada track, em todas requisições de searchForFlights com Ticket Class iguais a First Class. Este serviço é chamado ao fazer pesquisa de vôos.",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_INSERT_MANY_LOGS/api-manager",
     "value": "500",
@@ -31,8 +29,7 @@
   },
   {
     "title": "Item 56",
-    "description":
-      "Chamada da API /api/ticketClass diversas vezes com intervalo de 500ms entre as chamadas. A HR 'Use Case 56' irá gerar o evento.",
+    "description": "Chamada da API /api/ticketClass diversas vezes com intervalo de 500ms entre as chamadas. A HR 'Use Case 56' irá gerar o evento.",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_CALL_MANY_TICKET_CLASS/api-manager",
     "value": "500",
@@ -42,8 +39,7 @@
   },
   {
     "title": "Item 66, Item 68",
-    "description":
-      "Chamada da API /api/airportDetails diversas vezes e timeout aleatório na API entre 500ms e 10s.",
+    "description": "Chamada da API /api/airportDetails diversas vezes e timeout aleatório na API entre 500ms e 10s.",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_AIRLINE_DETAIL_TIMEOUT/flight-services",
     "value": "10000",
@@ -53,8 +49,7 @@
   },
   {
     "title": "Item 67, Item 68",
-    "description":
-      "A gravação de track (log) terá timeout aleatório entre 1s e 5s para 25% das requisições.",
+    "description": "A gravação de track (log) terá timeout aleatório entre 1s e 5s para 25% das requisições.",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_ADD_TRACK_SLEEP/track-services",
     "value": "5000",
@@ -64,8 +59,7 @@
   },
   {
     "title": "Item 117 - Exception",
-    "description":
-      "Gera exception ao buscar Log (Track no menu). O erro gerado é uma chamada POST em uma API GET gerando o erro 405.",
+    "description": "Gera exception ao buscar Log (Track no menu). O erro gerado é uma chamada POST em uma API GET gerando o erro 405.",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_EXCEPTION_CODE/api-manager",
     "value": "ON",
@@ -75,8 +69,7 @@
   },
   {
     "title": "Item 117 - JVM Crash",
-    "description":
-      "==> CUIDADO!!!!! <== Vai gerar JVM Crash e o container principal (api-manager) vai cair, será reiniciado automaticamente pelo docker-compose!",
+    "description": "==> CUIDADO!!!!! <== Vai gerar JVM Crash e o container principal (api-manager) vai cair, será reiniciado automaticamente pelo docker-compose!",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_JVM_CRASH/api-manager",
     "value": "ON",
@@ -86,8 +79,7 @@
   },
   {
     "title": "Item 83 - Erro na query",
-    "description":
-      "O robô irá executar a API /api/track/error-db",
+    "description": "O robô irá executar a API /api/track/error-db",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_ERROR_INSERT_QUERY/track-services",
     "value": "ON",
@@ -97,10 +89,19 @@
   },
   {
     "title": "Item 63 - Restart gerando problema",
-    "description":
-      "O robô irá parar e iniciar o container api-manager e em seguida enviar diveras requisições para a BT /api/ticketClass, elevando seu Load e gerando dois eventos, um de restart e outro de BT.",
+    "description": "O robô irá parar e iniciar o container api-manager e em seguida enviar diveras requisições para a BT /api/ticketClass, elevando seu Load e gerando dois eventos, um de restart e outro de BT.",
     "buttonValue": "TURN ON",
-    "url": "/useCase/UC_SPIKE_TICKET_CLASS/flight-services",
+    "url": "/useCase/UC_SPIKE_TICKET_CLASS_STOP_API_MANAGER/flight-services",
+    "value": "ON",
+    "enabled": false,
+    "isLoading": false,
+    "error": ""
+  },
+  {
+    "title": "Muitas requisições em uma BT",
+    "description": "O robô irá enviar diveras requisições para a BT /api/ticketClass, elevando seu Load.",
+    "buttonValue": "TURN ON",
+    "url": "/useCase/UC_SPIKE_TICKET_CLASS/api-manager",
     "value": "ON",
     "enabled": false,
     "isLoading": false,
@@ -108,8 +109,7 @@
   },
   {
     "title": "Item 53 - Garantia de 100% monitorado",
-    "description":
-      "O robô irá parar todos os processos dele e executar apenas a chamada da BT /api/airlines, executando 30 requisições a cada 60 segundos. Obs.: as APIs de HealCheck não tem como evitar, sempre serão executadas internamente pelo seu próprio container.",
+    "description": "O robô irá parar todos os processos dele e executar apenas a chamada da BT /api/airlines, executando 30 requisições a cada 60 segundos. Obs.: as APIs de HealCheck não tem como evitar, sempre serão executadas internamente pelo seu próprio container.",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_ONLY_ONE_BT/api-manager",
     "value": "ON",
@@ -119,13 +119,12 @@
   },
   {
     "title": "Controle do Robô Básico",
-    "description":
-      "Parar o robô que simula navegação básica do usuário pelo Browser",
+    "description": "Parar o robô que simula navegação básica do usuário pelo Browser",
     "buttonValue": "TURN ON",
     "url": "/useCase/UC_STOP_LOADER_BASIC/api-manager",
     "value": "ON",
     "enabled": false,
     "isLoading": false,
     "error": ""
-  }  
+  }
 ]
