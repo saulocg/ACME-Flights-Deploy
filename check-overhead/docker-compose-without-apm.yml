@@ -2,6 +2,45 @@ version: "3.5"
 
 services:
   ########################################################
+  ### Loaders
+  ########################################################
+
+  loader-basic:
+    container_name: loader-basic
+    hostname: loader-basic
+    restart: on-failure
+    image: fernandodumont/acme-flights-loaders:latest
+    environment:
+      - ENABLE_BASE_LOAD=1
+      - APPDYNAMICS_CONTROLLER_SSL_ENABLED=false
+    env_file: ../config/appd/controller.env
+    volumes:
+      - ../config/loader/base-load.yml:/app/config/base-load.yml
+    depends_on:
+      api-manager:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  loader-use-case:
+    container_name: loader-use-case
+    hostname: loader-use-case
+    restart: on-failure
+    image: fernandodumont/acme-flights-loaders:latest
+    environment:
+      - ENABLE_USE_CASES_LOAD=1
+      - APPDYNAMICS_CONTROLLER_SSL_ENABLED=false
+    env_file: ../config/appd/controller.env
+    volumes:
+      - ../config/loader/use-cases.yml:/app/config/use-cases.yml
+      - ./pipe:/hostpipe
+    depends_on:
+      api-manager:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  ########################################################
   ### Web Front End
   ########################################################
 
@@ -10,16 +49,21 @@ services:
     hostname: web-frontend
     restart: on-failure
     image: fernandodumont/acme-flights-web:latest
+    env_file: ../config/appd/controller.env
     expose:
       - 8090
     ports:
       - 8090:80
     volumes:
-      - ../config/web-frontend/env.js:/usr/share/nginx/html/assets/env.js
       - ../config/web-frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+      - ../config/web-frontend/env.js:/usr/share/nginx/html/assets/env.js
+      - ../config/web-frontend/appd.js:/usr/share/nginx/html/assets/appd.js
+      - ../config/web-frontend/use-cases.json:/usr/share/nginx/html/assets/use-cases.json
     depends_on:
       api-manager:
         condition: service_healthy
+    networks:
+      - acme-flights-net
 
   ########################################################
   ### Java
@@ -37,6 +81,8 @@ services:
     depends_on:
       flight-services:
         condition: service_healthy
+    networks:
+      - acme-flights-net
 
   flight-services:
     container_name: flight-services
@@ -46,6 +92,8 @@ services:
     depends_on:
       ticket-services:
         condition: service_healthy
+    networks:
+      - acme-flights-net
 
   ticket-services:
     container_name: ticket-services
@@ -55,6 +103,8 @@ services:
     depends_on:
       track-services:
         condition: service_healthy
+    networks:
+      - acme-flights-net
 
   track-services:
     container_name: track-services
@@ -64,6 +114,8 @@ services:
     depends_on:
       ws-services:
         condition: service_healthy
+    networks:
+      - acme-flights-net
 
   activemq-services:
     container_name: activemq-services
@@ -73,6 +125,8 @@ services:
     depends_on:
       api-manager:
         condition: service_healthy
+    networks:
+      - acme-flights-net
 
   ws-services:
     container_name: ws-services
@@ -86,6 +140,12 @@ services:
     depends_on:
       php-services:
         condition: service_healthy
+    networks:
+      - acme-flights-net
+
+  ########################################################
+  ### PHP
+  ########################################################
 
   php-services:
     container_name: php-services
@@ -96,15 +156,20 @@ services:
       - 8085
     ports:
       - 8085:8085
+    environment:
+      - WITH_AGENT=0
     depends_on:
-      sap-services:
-        condition: service_healthy
-      finance-services:
-        condition: service_healthy
+      - mongo-acme
+      - mysql-acme
+      - activemq-broker
+      - ldap-acme
+    networks:
+      - acme-flights-net
 
   # ########################################################
   # ### Mock Services
   # ########################################################
+  
   sap-services:
     container_name: sap-services
     hostname: sap-services
@@ -115,6 +180,8 @@ services:
       - mysql-acme
       - activemq-broker
       - ldap-acme
+    networks:
+      - acme-flights-net
 
   finance-services:
     container_name: finance-services
@@ -126,6 +193,8 @@ services:
       - mysql-acme
       - activemq-broker
       - ldap-acme
+    networks:
+      - acme-flights-net
 
   ########################################################
   ### Databases and other backends
@@ -140,6 +209,8 @@ services:
       - 27017
     ports:
       - 27017:27017
+    networks:
+      - acme-flights-net
 
   mysql-acme:
     image: fernandodumont/acme-flights-mysql:latest
@@ -150,6 +221,8 @@ services:
       - 3306
     ports:
       - 3306:3306
+    networks:
+      - acme-flights-net
 
   activemq-broker:
     image: fernandodumont/activemq-broker:latest
@@ -162,6 +235,8 @@ services:
     ports:
       - 8161:8161
       - 61616:61616
+    networks:
+      - acme-flights-net
 
   ldap-acme:
     image: bitnami/openldap:latest
@@ -179,3 +254,44 @@ services:
     ports:
       - 1389:1389
       - 1636:1636
+    networks:
+      - acme-flights-net
+
+  ########################################################
+  ### AppDynamics
+  ########################################################
+
+  java-agent-acme:
+    container_name: java-agent-acme
+    hostname: java-agent-acme
+    image: appdynamics/java-agent:latest
+    volumes:
+      - java-agent-acme:/opt/appdynamics
+
+  machine-agent-acme:
+    container_name: machine-agent-acme
+    hostname: machine-agent-acme
+    image: appdynamics/machine-agent-analytics:latest
+    env_file: ../config/appd/controller.env
+    environment:
+      - APPDYNAMICS_SIM_ENABLED=true
+      - APPDYNAMICS_DOCKER_ENABLED=true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /:/hostroot:ro
+      - ../config/certificates/cacerts-ma:/usr/local/openjdk-8/lib/security/cacerts
+    expose:
+      - 9090
+    depends_on:
+      api-manager:
+        condition: service_healthy
+    networks:
+      - acme-flights-net
+
+volumes:
+  java-agent-acme:
+  php-agent-acme:
+
+networks:
+  acme-flights-net:

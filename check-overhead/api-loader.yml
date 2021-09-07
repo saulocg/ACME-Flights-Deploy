@@ -1,0 +1,5 @@
+wait: 1000
+count: 1
+api:
+  # - { url: "http://labs-acmeflights-bmrfioza.appd-cloudmachine.com:8080/api/login", typeRequest: "POST", postData: { "email": "fernando@fernando.com.br", "password": "123"} }
+  - { url: "http://localhost:8080/api/airports", typeRequest: "GET" }
