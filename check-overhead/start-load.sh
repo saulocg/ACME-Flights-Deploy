@@ -1,10 +1,10 @@
 #!/bin/bash
 
-URL_API=
+URL_API="https://gorest.co.in/public/v1/users"
 for ARGUMENT in "$@"
 do
     if [ "$ARGUMENT" = "--api" ]; then
-        URL_API="https://gorest.co.in/public/v1/users"
+        URL_API=""
     fi
 done
 
