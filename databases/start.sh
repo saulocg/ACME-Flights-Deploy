@@ -16,5 +16,6 @@ if [ $SKIP_PULL == false ];then
 fi
 
 mkdir -p oracle/oradata
+chmod -R 777 oracle/oradata
 
 docker-compose -f docker-compose.yml up -d
