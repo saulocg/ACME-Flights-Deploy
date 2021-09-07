@@ -1,5 +1,6 @@
 wait: 100
 count: 1
+total: 70
 api:
   - { url: "http://localhost:8080/api/login", typeRequest: "POST", postData: { "email": "fernando@fernando.com.br", "password": "123"} }
   # - { url: "http://localhost:8080/api/airports", typeRequest: "GET" }
