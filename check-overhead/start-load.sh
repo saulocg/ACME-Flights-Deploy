@@ -1,9 +1,18 @@
 #!/bin/bash
 
+URL_API=
+for ARGUMENT in "$@"
+do
+    if [ "$ARGUMENT" = "--api" ]; then
+        URL_API="https://gorest.co.in/public/v1/users"
+    fi
+done
+
 docker stop loader-basic loader-use-case
 
+# ACME="labs-acmeflights-bmrfioza.appd-cloudmachine.com:8080"
 ACME="localhost:8080"
-JSON="{\"urlApi\":\"\"}"
+JSON="{\"urlApi\":\"$URL_API\"}"
 
 curl -s \
     --header "Accept: application/json, text/plain, */*" \
